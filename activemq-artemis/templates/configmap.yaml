@@ -29,15 +29,22 @@ data:
           <cluster-connection name="{{ $releaseName }}">
             <address>jms</address>
             <connector-ref>{{ $fullname }}-0</connector-ref>
+            <check-period>1000</check-period>
+            <connection-ttl>5000</connection-ttl>
+            <min-large-message-size>50000</min-large-message-size>
+            <call-timeout>30000</call-timeout>
             <retry-interval>500</retry-interval>
-            <retry-interval-multiplier>1.1</retry-interval-multiplier>
+            <retry-interval-multiplier>1.0</retry-interval-multiplier>
             <max-retry-interval>5000</max-retry-interval>
             <initial-connect-attempts>-1</initial-connect-attempts>
             <reconnect-attempts>-1</reconnect-attempts>
-
-            <message-load-balancing>OFF</message-load-balancing>
-            <max-hops>1</max-hops>
-
+            <use-duplicate-detection>true</use-duplicate-detection>
+            <message-load-balancing>ON_DEMAND</message-load-balancing>
+            <max-hops>2</max-hops>
+            <confirmation-window-size>32000</confirmation-window-size>
+            <call-failover-timeout>30000</call-failover-timeout>
+            <notification-interval>1000</notification-interval>
+            <notification-attempts>100</notification-attempts>
             <static-connectors>
               {{ range $i,$t := until (int .Values.replicas) }}
                 {{ range tuple "master" "slave" }}

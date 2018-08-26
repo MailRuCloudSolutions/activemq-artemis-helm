@@ -5,7 +5,7 @@ image:
   # image.repository is the ActiveMQ Artemis image name
   repository: vromero/activemq-artemis
   # image.tag is the ActiveMQ Artemis image's tag: https://hub.docker.com/r/vromero/activemq-artemis/tags
-  # tag: 2.6.2
+  tag: 2.6.1-alpine
   # image.pullPolicy is the ActiveMQ Artemis image's pull policy
   pullPolicy: Always
   # image.pullSecrets optionally specify an array of imagePullSecrets.Secrets must be manually created in the namespace.
@@ -50,11 +50,11 @@ replica:
 ## Persist data to a persitent volume
 persistence:
   testJournalPerformance: AUTO
-  enabled: false
+  enabled: true
   ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
   ## Default: volume.alpha.kubernetes.io/storage-class: default
   ##
-  # storageClass:
+  storageClass: hdd
   accessMode: ReadWriteOnce
   size: 8Gi
 
@@ -71,3 +71,8 @@ resources:
 # Probably this is only useful for minikube environments and CI
 loadbalancer:
   enabled: true
+
+#helm install --wait --timeout 600 --set loadbalancer.enabled=false --name amq4 activemq-artemis
+#java.net.UnknownHostException: amq2-activemq-artemis-slave-1.amq2-activemq-artemis-slave.default.svc.cluster.local
+#k exec -it amq4-activemq-artemis-master-0 /bin/sh
+ # k log -f amq4-activemq-artemis-slave-0

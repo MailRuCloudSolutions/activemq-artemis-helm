@@ -9,11 +9,12 @@ metadata:
 spec:
   serviceName: {{ include "artemis.fullname" . }}-slave
   replicas: {{ .Values.replicas }}
+  podManagementPolicy: "Parallel"
   revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: {{ template "artemis.name" . }}
-      release: {{ .Release.Name | quote }}    
+      release: {{ .Release.Name | quote }}
       component: slave
   template:
     metadata:
@@ -25,6 +26,9 @@ spec:
         release: {{ .Release.Name | quote }}
         component: slave
     spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
       strategy:
         type: Recreate
       initContainers:
@@ -68,7 +72,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: http
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           tcpSocket:
@@ -93,11 +97,23 @@ spec:
       - name: configure-slave
         configMap:
           name: {{ include "artemis.fullname" . }}-configure-slave
-      - name: data
       {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ include "artemis.fullname" . }}
       {{- else }}
+      - name: data
         emptyDir: {}
       {{- end -}}
-
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ include "artemis.fullname" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size | quote }}
+      storageClassName:  {{ .Values.persistence.storageClass | quote }}
+  {{- end -}}

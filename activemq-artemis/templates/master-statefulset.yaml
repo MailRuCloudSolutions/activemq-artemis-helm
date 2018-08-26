@@ -10,6 +10,7 @@ spec:
   serviceName: {{ include "artemis.fullname" . }}-master
   replicas: {{ .Values.replicas }}
   revisionHistoryLimit: 10
+  podManagementPolicy: "Parallel"
   selector:
     matchLabels:
       app: {{ template "artemis.name" . }}
@@ -25,6 +26,9 @@ spec:
         release: {{ .Release.Name | quote }}
         component: master
     spec:
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
       affinity:
         podAntiAffinity:
         {{- if eq .Values.antiAffinity "hard" }}
@@ -89,7 +93,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: http
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           tcpSocket:
@@ -114,10 +118,23 @@ spec:
       - name: configure-master
         configMap:
           name: {{ include "artemis.fullname" . }}-configure-master
-      - name: data
       {{- if .Values.persistence.enabled }}
-        persistentVolumeClaim:
-          claimName: {{ include "artemis.fullname" . }}
       {{- else }}
+      - name: data
         emptyDir: {}
       {{- end -}}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: {{ include "artemis.fullname" . }}
+        release: {{ .Release.Name | quote }}
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size | quote }}
+      storageClassName:  {{ .Values.persistence.storageClass | quote }}
+  {{- end -}}
