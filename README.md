@@ -1,3 +1,5 @@
+This chart is a fork of the chart located in the [https://github.com/apache/activemq-artemis](https://github.com/apache/activemq-artemis) repo.
+
 
 ## 1. What is ActiveMQ Artemis?
 
@@ -17,6 +19,23 @@ This chart bootstraps a cluster of ActiveMQ Artemis nodes with a configurable si
 [symmetric cluster](https://activemq.apache.org/artemis/docs/latest/clusters.html#cluster-topologies) with only one
 active master.
 
+By default a cluster contains 4 nodes: 2 Master nodes and 2 slave nodes. Each slave node acts as a back up of a corresponding master node.
+
+_Important behaviour:_
+> Initially all the slave nodes are only listening at the `http` port, but listening at the `core` and `amq` ports.
+Once one of master nodes fails, the fallback happens and a slave node receives `MASTER` role and starts listening at the `core` port.
+The original version of the chart used readinessProbes that checked connection to the `core` port. 
+However, the side effect was that all Slave pods were in `NotReady` state until one of Masters' fail. 
+We changed this behavior and made readiness probes optional: they can be controlled via `useReadinessProbes` param.  
+
+
+_Note:_
+> This chart uses High Availability based on [Data Replication](https://activemq.apache.org/artemis/docs/latest/ha.html#data-replication). 
+It means that each pod either Master or Slave mounts a separate (block) storage volume and replicates data to other pods using tcp.
+
+> High Availability based on [Shared store](https://activemq.apache.org/artemis/docs/latest/ha.html#shared-store) is not currently supported.   
+
+
 ## 3. Prerequisites
 
 - Kubernetes 19+ with Beta APIs enabled
@@ -33,7 +52,7 @@ At this point when the package is searched for it should be found:
 
 ```bash
 CHART VERSION	APP VERSION	DESCRIPTION                                       
-activemq-artemis/activemq-artemis	0.0.1        	           	a multi-protocol, embeddable, very high perform...
+activemq-artemis/activemq-artemis	0.0.2        	           	a multi-protocol, embeddable, very high perform...
 ```
 
 If the package could be found in the previous step, to install the chart with the release name `my-release` just:
@@ -80,6 +99,7 @@ The following tables lists the configurable parameters of the MySQL chart and th
 | `imagePullPolicy`                    | Image pull policy                     | `IfNotPresent`                                             |
 | `artemisUser`                        | Username of new user to create.       | `artemis`                                                  |
 | `artemisPassword`                    | Password for the new user.            | `simetraehcapa`                                            |
+| `useReadinessProbes`                 | Use readiness probes ( core port)     | false                                                      |
 | `replicas`                           | Number of nodes in the cluster.       | 2                                                          |
 | `persistence.enabled`                | Create a volume to store data         | true                                                       |
 | `persistence.size`                   | Size of persistent volume claim       | 8Gi RW                                                     |
