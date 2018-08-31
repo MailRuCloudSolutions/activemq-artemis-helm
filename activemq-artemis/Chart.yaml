@@ -15,7 +15,7 @@ icon: https://activemq.apache.org/artemis/images/activemq-logo.png
 sources:
 - https://github.com/kubernetes/charts
 - https://github.com/apache/activemq-artemis
-- https://github.com/MailRuCloudSolutions/activemq-artemis
+- https://github.com/mailrucloudsolutions/activemq-artemis
 maintainers:
 - name: vromero
   email: victor.romero@gmail.com

@@ -25,6 +25,6 @@ entries:
     - https://github.com/kubernetes/charts
     - https://github.com/apache/activemq-artemis
     urls:
-    - https://vromero.github.io/charts/activemq-artemis-0.0.1.tgz
+    - https://mailrucloudsolutions.github.io/activemq-artemis-helm/charts/activemq-artemis-0.0.2.tgz
     version: 0.0.2
 generated: 2018-08-30T16:30:14.418574063-03:00

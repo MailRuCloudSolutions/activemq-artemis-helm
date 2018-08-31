@@ -46,7 +46,8 @@ It means that each pod either Master or Slave mounts a separate (block) storage 
 Just like in Debian, Fedora or similar. First we need to add a repository to our list:
 
 ```bash
-helm repo add activemq-artemis https://MailRuCloudSolutions.github.io/activemq-artemis-helm/
+helm repo add activemq-artemis https://mailrucloudsolutions.github.io/activemq-artemis-helm/
+
 ```
 At this point when the package is searched for it should be found:
 
