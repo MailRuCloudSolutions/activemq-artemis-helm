@@ -19,6 +19,7 @@ spec:
     port: 5672
     targetPort: amqp
   clusterIP: None
+  sessionAffinity: ClientIP
   selector:
     app: {{ template "artemis.name" . }}
     release: {{ .Release.Name | quote }}
