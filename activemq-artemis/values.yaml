@@ -73,4 +73,5 @@ resources:
 # Probably this is only useful for minikube environments and CI
 loadbalancer:
   enabled: true
+  createInternalOpenStackLoadBalancer: false
 

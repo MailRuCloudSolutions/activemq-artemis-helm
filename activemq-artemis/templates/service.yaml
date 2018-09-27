@@ -7,10 +7,14 @@ metadata:
   annotations:
     # Make sure DNS is resolvable during initialization.
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+    {{- if .Values.loadbalancer.createInternalOpenStackLoadBalancer }}
+    service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
+    {{- end }}
   name: {{ include "artemis.fullname" . }}
   labels:
 {{ include "artemis.labels.standard" . | indent 4 }}
 spec:
+  externalTrafficPolicy: Cluster
   ports:
   - name: http
     port: 8161
@@ -22,6 +26,10 @@ spec:
     port: 5672
     targetPort: amqp
   type: LoadBalancer
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
   selector:
     app: {{ template "artemis.name" . }}
     release: {{ .Release.Name | quote }}
