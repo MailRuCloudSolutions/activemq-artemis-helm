@@ -92,7 +92,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## 6. Configuration
 
-The following tables lists the configurable parameters of the MySQL chart and their default values.
+The following tables lists the configurable parameters of the Active chart and their default values.
 
 | Parameter                            | Description                           | Default                                                    |
 | ------------------------------------ | ------------------------------------- | ---------------------------------------------------------- |
@@ -109,6 +109,8 @@ The following tables lists the configurable parameters of the MySQL chart and th
 | `persistence.testJournalPerformance` | See docker image docs                 | `AUTO`                                                     |
 | `resources.request.memory`           | Memory resource requests/limits       | `256Mi`                                                    |
 | `resources.request.cpu`              | CPU/Memory resource requests/limits   | `100m`                                                     |
+| `loadbalancer.enabled`               | Whether enable load balancer creation | true                                                      |
+| `loadbalancer.createInternalOpenStackLoadBalancer`               | Whether create internal OpenStack load balancer | false                                                      |
 
 Some of the parameters above map to the env variables defined in the [vromero's ActiveMQ Artemis image](https://hub.docker.com/r/vromero/activemq-artemis/) refer to it for values, meaning, etc.
 
