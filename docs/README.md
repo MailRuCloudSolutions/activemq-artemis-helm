@@ -111,6 +111,7 @@ The following tables lists the configurable parameters of the Active chart and t
 | `resources.request.cpu`              | CPU/Memory resource requests/limits   | `100m`                                                     |
 | `loadbalancer.enabled`               | Whether enable load balancer creation | true                                                      |
 | `loadbalancer.createInternalOpenStackLoadBalancer`               | Whether create internal OpenStack load balancer | false                                                      |
+| `security.enabled`               | Enable built-in security https://activemq.apache.org/artemis/docs/latest/security.html | false                                                      |
 
 Some of the parameters above map to the env variables defined in the [vromero's ActiveMQ Artemis image](https://hub.docker.com/r/vromero/activemq-artemis/) refer to it for values, meaning, etc.
 

@@ -8,7 +8,12 @@ data:
 
   template-slave.xml: |
     <configuration xmlns="urn:activemq" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
+
       <core xmlns="urn:activemq:core" xsi:schemaLocation="urn:activemq:core ">
+        {{- if .Values.security.enabled }}
+        <security-enabled>false</security-enabled>
+        {{- end }}
+
         <ha-policy>
           <replication>
             <slave>
