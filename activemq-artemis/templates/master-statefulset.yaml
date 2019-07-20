@@ -140,6 +140,6 @@ spec:
           storage: {{ .Values.persistence.size | quote }}
 
       {{- if .Values.persistence.storageClass }}
-          storageClassName:  {{ .Values.persistence.storageClass | quote }}
+      storageClassName:  {{ .Values.persistence.storageClass | quote }}
       {{- end }}
   {{- end -}}
